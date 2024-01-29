@@ -41,22 +41,35 @@ while choice != "5":
     choice = input("> ")
     
     if choice == "1" :
-        cursor.execute("SELECT * FROM User ")
+        cursor.execute("SELECT * FROM test ")
         rows = cursor.fetchall()
         if rows:
-            custom_column_names = ['ID','First name','Last name','last update']
+            custom_column_names = ['ID','First name','Last name','Birthday','create date', 'update date']
             pf = pd.DataFrame(rows)
             pf.columns = custom_column_names
             print (pf)
         else:
+            cursor.execute("CREATE TABLE IF NOT EXISTS `test`.`test` (`ID` INT AUTO_INCREMENT,`First_name` VARCHAR(45) NOT NULL,`Last_name` VARCHAR(45) NOT NULL,`Birthday` DATE NOT NULL,PRIMARY KEY (`ID`));")
             print("no data ")
     elif choice == "2" : 
-        
-        cursor.execute("INSERT INTO User (last_name, first_name, birthday, gender)VALUES ('Chen', 'Gilber','1998-10-02', 'Male')")
+        last_name = input("what is your last name: ")
+        first_name = input("What is your first name: ")
+        birthday = input("When is your birthday yyyy-mm-dd: ")
+        cursor.execute(f"INSERT INTO test (Last_name, First_name, Birthday) VALUES ('{last_name}', '{first_name}','{birthday}');")
+        cnxn.commit()
         print ('add actor sucessfully')
     
     elif choice == "3" : 
+        user_id = input("Which user ID whats to update: ")
+        last_name = input("User new last name: ")
+        first_name = input("User new first name: ")
+        birthday = input("User new birthday: ")
+        cursor.execute(f"UPDATE test SET Last_name = '{last_name}', First_name = '{first_name}', Birthday = '{birthday}' WHERE ID = {user_id};")
+        cnxn.commit()
         print (' update actor sucessfully')
     elif choice == "4" : 
+        delete_id = input("Which ID you want to delete: ")
+        cursor.execute(f"DELETE FROM `test`.`test` WHERE `ID` = {delete_id};")
+        cnxn.commit()
         print ('delete sucessfuly')
 
